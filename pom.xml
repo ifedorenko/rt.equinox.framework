@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+  xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.eclipse.equinox.framework</groupId>
+  <artifactId>rt.equinox.framework</artifactId>
+  <version>3.8.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  
+  <properties>
+    <tycho.version>0.13.0-SNAPSHOT</tycho.version>
+  </properties>
+  
+  <modules>
+
+    <module>bundles/org.eclipse.equinox.launcher</module>
+    <module>bundles/org.eclipse.equinox.launcher.carbon.macosx</module>
+    <module>bundles/org.eclipse.equinox.launcher.cocoa.macosx</module>
+    <module>bundles/org.eclipse.equinox.launcher.cocoa.macosx.x86_64</module>
+    <module>bundles/org.eclipse.equinox.launcher.gtk.aix.ppc</module>
+    <module>bundles/org.eclipse.equinox.launcher.gtk.aix.ppc64</module>
+    <module>bundles/org.eclipse.equinox.launcher.gtk.hpux.ia64_32</module>
+    <module>bundles/org.eclipse.equinox.launcher.gtk.linux.ppc</module>
+    <module>bundles/org.eclipse.equinox.launcher.gtk.linux.ppc64</module>
+    <module>bundles/org.eclipse.equinox.launcher.gtk.linux.s390</module>
+    <module>bundles/org.eclipse.equinox.launcher.gtk.linux.s390x</module>
+    <module>bundles/org.eclipse.equinox.launcher.gtk.linux.x86</module>
+    <module>bundles/org.eclipse.equinox.launcher.gtk.linux.x86_64</module>
+    <module>bundles/org.eclipse.equinox.launcher.gtk.solaris.sparc</module>
+    <module>bundles/org.eclipse.equinox.launcher.gtk.solaris.x86</module>
+    <module>bundles/org.eclipse.equinox.launcher.motif.aix.ppc</module>
+    <module>bundles/org.eclipse.equinox.launcher.motif.hpux.ia64_32</module>
+    <module>bundles/org.eclipse.equinox.launcher.motif.linux.x86</module>
+    <module>bundles/org.eclipse.equinox.launcher.motif.solaris.sparc</module>
+    <module>bundles/org.eclipse.equinox.launcher.win32.win32.ia64</module>
+    <module>bundles/org.eclipse.equinox.launcher.win32.win32.x86</module>
+    <module>bundles/org.eclipse.equinox.launcher.win32.win32.x86_64</module>
+    <module>bundles/org.eclipse.equinox.launcher.wpf.win32.x86</module>
+
+    <module>bundles/org.eclipse.equinox.executable</module>
+
+    <module>bundles/org.eclipse.osgi</module>
+    <module>bundles/org.eclipse.osgi.services</module>
+    <module>bundles/org.eclipse.osgi.util</module>
+
+
+    <module>bundles/org.eclipse.osgi.tests</module>
+
+    <!--
+    <module>features/org.eclipse.equinox.core.sdk</module>
+    -->
+
+  </modules>
+
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-maven-plugin</artifactId>
+        <version>${tycho.version}</version>
+        <extensions>true</extensions>
+      </plugin>
+    </plugins>
+  </build>
+
+
+  <profiles>
+    <!--
+      workaround for https://issues.sonatype.org/browse/TYCHO-562
+      tycho-source-plugin chokes on bundles without source folders, so we disable it with marker file
+    -->
+    <profile>
+      <id>source-bundle</id>
+      <activation>
+        <file>
+          <missing>no-source-bundle.txt</missing>
+        </file>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.eclipse.tycho</groupId>
+            <artifactId>tycho-source-plugin</artifactId>
+            <version>${tycho.version}</version>
+            <executions>
+              <execution>
+                <id>plugin-source</id>
+                <goals>
+                  <goal>plugin-source</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+</project>
