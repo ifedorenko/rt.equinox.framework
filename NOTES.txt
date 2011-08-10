@@ -1,0 +1,46 @@
+Experimental and incomplete Tycho build configuration for rt.equinox.framework.
+
+At this point this should be considered as non-working prototype because I did not try to actually install and run
+bundles produced by this build. Below are some observations and comments based on this prototype
+
+* Native launchers are expected to be available from Maven repository. I have a strivial bash script to install
+rt.equinox.binaries to Maven local repository, but whatever process produces these binaries should deploy them to
+Maven repository directly.
+
+* I think org.eclipse.equinox.core.sdk feature should be moved to another repository to break circular dependency 
+between rt.equinox.framework and rt.equinox.bundles git repositories. Currently, both repositories have to be built 
+together, which will complicate build system setup. Also see my comments about map files below.
+
+* org.eclipse.osgi.tests has "forward" dependencies on bundles available from other git repositories and from CVS.
+Again, this introduces circular dependencies among more git repositories, which will require more repositories to be
+built together.
+
+* org.eclipse.test.performance.* are required to compile org.eclipse.osgi.tests but are not available from any git
+repository.
+
+* Map files are not supported and I am not sure they are a good git for git in general, regardless of Maven and Tycho.
+I believe it is possible to implement "integration" branch using native git branch/merge/tag support.
+
+* There is no good/ready solution for running integration tests on multiple systems yet. Ideally, we want to build
+everything once, publish results somewhere, then run integration tests on all relevant systems.
+
+* Maintenance release should only include changed bundles and features. Currently Tycho builds and produces new version
+of everything, even if the new version is identical to the old one. Properly and reliably detecting when there is no 
+change is tricky. For bundles this most likely requires bytecode analysis.
+
+* No PDE API analysis support
+
+* Can't build platform with the latest JDT and P2. Looks like we need to build JDT and P2 first, using old(er) version 
+of Tycho. Then relaunch Platform build using the new JDT and P2.
+
+* Can't compile against specific JRE.
+
+* I would seriously look at using pom-first aprroach (i.e., maven-bundle-plugin/bnd/pax-construct generate bundle 
+manifest from pom.xml). This is a HUGE paradigm shift compared to hand-crafting bundle manifests, but it is very 
+popular way to produce OSGi bundles with Maven and will essentially merge two competing OSGi development communities
+into one, using and improving the same tooling and processes.
+
+* Tycho 0.13 changes/fixes specifically implemented for this build so far
+  354250 If possible, derive target environment os/ws/arch from Eclipse-PlatformFilter 
+  354221 tycho-source-plugin fails when no sources 
+  354118 Some build.properties embedded library entries are not on compile classpath 
